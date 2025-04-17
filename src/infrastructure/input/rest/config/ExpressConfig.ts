@@ -22,6 +22,7 @@ const employeeHandler = new EmployeeHandler(employeeUseCase);
 const employeeController = new EmployeeController(employeeHandler);
 
 const app = express();
+app.disable("x-powered-by");
 
 app.use(express.json());
 app.use('/employees', EmployeeRoutes(employeeController));

@@ -10,6 +10,9 @@ import { logger } from "../../../config/logger";
 import { CreateCognitoUserError } from "../../helper/exceptions/CreateCognitoUserError";
 import { MESSAGE } from "../helper/constants/MessageExceptions";
 import { AddUserToGroupError } from "../../helper/exceptions/AddUserToGroupError";
+import { GetUserGroupsError } from "../../helper/exceptions/GetUserGroupsError";
+import { RemoveUserFromGroupsError } from "../../helper/exceptions/RemoveUserFromGroupsError";
+import { DeleteUserError } from "../../helper/exceptions/DeleteUserError";
 export class CognitoService implements CognitoService {
     private readonly cognitoClient: CognitoIdentityProviderClient;
     private readonly userPoolId: string;
@@ -44,9 +47,10 @@ export class CognitoService implements CognitoService {
             if (response.User) {
 
                 try {
-                    await this.addUserToGroup(email, position);
-
+                    
                     logger.info(`User ${response.User?.Username} created successfully`);
+
+                    await this.addUserToGroup(email, position);
 
                     result = {
                         success: true,
@@ -110,8 +114,12 @@ export class CognitoService implements CognitoService {
                 message: `Usuario ${username} eliminado correctamente`,
             };
         } catch (error) {
-            logger.error('Error deleting user:', error);
-            throw error;
+            if (error instanceof RemoveUserFromGroupsError || error instanceof GetUserGroupsError) {
+                throw error;
+            } else {
+                logger.error('Error :', error);
+                throw new DeleteUserError(MESSAGE.DELETE_USER);
+            }
         }
     }
 
@@ -128,8 +136,8 @@ export class CognitoService implements CognitoService {
                 groups: response.Groups?.map(group => group.GroupName) || []
             };
         } catch (error) {
-            console.error('Error getting user groups:', error);
-            throw error;
+            logger.error('Error obteniendo los grupos del usurio:', error);
+            throw new GetUserGroupsError(MESSAGE.GET_USER_GROUPS);
         }
     }
 
@@ -147,8 +155,8 @@ export class CognitoService implements CognitoService {
 
             await Promise.all(removePromises);
         } catch (error) {
-            console.error('Error removing user from groups:', error);
-            throw error;
+            logger.error('Error eliminando el usuario de los grupos a os que pertenecia:', error);
+            throw new RemoveUserFromGroupsError(MESSAGE.REMOVE_USER_FROM_GROUP);
         }
     }
 
