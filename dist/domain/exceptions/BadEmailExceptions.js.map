@@ -1,0 +1,1 @@
+{"version":3,"file":"BadEmailExceptions.js","sourceRoot":"","sources":["../../../src/domain/exceptions/BadEmailExceptions.ts"],"names":[],"mappings":";;;AAAA,MAAa,kBAAmB,SAAQ,KAAK;IACzC,YAAY,OAAe;QACzB,KAAK,CAAC,OAAO,CAAC,CAAC;QACf,IAAI,CAAC,IAAI,GAAG,oBAAoB,CAAC;IACnC,CAAC;CACF;AALH,gDAKG"}

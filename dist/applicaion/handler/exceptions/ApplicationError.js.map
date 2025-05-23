@@ -1,0 +1,1 @@
+{"version":3,"file":"ApplicationError.js","sourceRoot":"","sources":["../../../../src/applicaion/handler/exceptions/ApplicationError.ts"],"names":[],"mappings":";;;AAAA,MAAa,gBAAiB,SAAQ,KAAK;IACzC,YAAY,OAAe;QACzB,KAAK,CAAC,OAAO,CAAC,CAAC;QACf,IAAI,CAAC,IAAI,GAAG,kBAAkB,CAAC;QAC/B,IAAI,CAAC,OAAO,GAAG,OAAO,CAAC;IACzB,CAAC;CACF;AAND,4CAMC"}

@@ -1,5 +1,5 @@
-import { EmployeeEntity } from "../entities/Employee";
+import { Employee } from "../entities/Employee"; // Changed from EmployeeEntity to Employee
 
 export interface EmployeeServicePort {
-    createEmployee(employee: EmployeeEntity): Promise<string>;
+    createEmployee(employee: Employee): Promise<string>; // Changed from EmployeeEntity to Employee
 }

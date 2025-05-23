@@ -1,0 +1,1 @@
+{"version":3,"file":"RemoveUserFromGroupsError.js","sourceRoot":"","sources":["../../../../src/infrastructure/helper/exceptions/RemoveUserFromGroupsError.ts"],"names":[],"mappings":";;;AAAA,MAAa,yBAA0B,SAAQ,KAAK;IAChD,YAAY,OAAe;QACvB,KAAK,CAAC,OAAO,CAAC,CAAC;QACf,IAAI,CAAC,IAAI,GAAG,2BAA2B,CAAC;QACxC,IAAI,CAAC,OAAO,GAAG,OAAO,CAAC;IAC3B,CAAC;CACJ;AAND,8DAMC"}

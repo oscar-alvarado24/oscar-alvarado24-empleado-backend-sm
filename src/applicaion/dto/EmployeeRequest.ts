@@ -51,6 +51,10 @@ export class EmployeeRequest {
   @Expose()
   @IsNotEmpty()
   empresa: number;
+
+  @Expose()
+  @IsNotEmpty()
+  department: string; // Added department
   
   constructor(data: { 
     email: string; 
@@ -61,7 +65,8 @@ export class EmployeeRequest {
     residencesType: string; 
     neighborhood: string; 
     position: string; 
-    empresa: number; 
+    empresa: number;
+    department: string; // Added department
   }) {
     this.email = data.email;
     this.firstName = data.firstName;
@@ -72,5 +77,6 @@ export class EmployeeRequest {
     this.neighborhood = data.neighborhood;
     this.position = data.position;
     this.empresa = data.empresa;
+    this.department = data.department; // Added department
   }
 }

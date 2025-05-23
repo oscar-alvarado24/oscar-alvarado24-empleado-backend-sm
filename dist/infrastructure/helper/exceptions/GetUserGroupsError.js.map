@@ -1,0 +1,1 @@
+{"version":3,"file":"GetUserGroupsError.js","sourceRoot":"","sources":["../../../../src/infrastructure/helper/exceptions/GetUserGroupsError.ts"],"names":[],"mappings":";;;AAAA,MAAa,kBAAmB,SAAQ,KAAK;IACzC,YAAY,OAAe;QACvB,KAAK,CAAC,OAAO,CAAC,CAAC;QACf,IAAI,CAAC,IAAI,GAAG,oBAAoB,CAAC;QACjC,IAAI,CAAC,OAAO,GAAG,OAAO,CAAC;IAC3B,CAAC;CACJ;AAND,gDAMC"}
