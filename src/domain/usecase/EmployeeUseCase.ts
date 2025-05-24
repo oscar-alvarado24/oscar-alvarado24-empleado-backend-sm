@@ -3,6 +3,7 @@ import { Employee } from "../entities/Employee"; // Changed from EmployeeEntity 
 import { SESService } from "../spi/ISes";
 import { CognitoService } from "../spi/ICognitoService";
 import { EmployeeServicePort } from "../api/IEmployeeServicePort";
+import { logger } from "../../config/logger";
 
 export class EmployeeUseCase implements EmployeeServicePort {
     constructor(
@@ -13,12 +14,6 @@ export class EmployeeUseCase implements EmployeeServicePort {
   
     async createEmployee(employee: Employee) { // Changed from EmployeeEntity to Employee
       try {
-        // Assuming employee.email and employee.position are accessible strings from the Employee object
-        // If Employee object's email/position are value objects, they need .toString() or similar
-        await this.sesService.registerEmailInSes(employee.email.toString()); // Assuming email is a Value Object
-
-        await this.cognitoService.createCognitoUser(employee.email.toString(), employee.position.toString()); // Assuming position is a Value Object
-  
         return await this.employeeRepository.create(employee); // This employeeRepository is the SPI version
       } catch (error) {
         if (error instanceof Error) {

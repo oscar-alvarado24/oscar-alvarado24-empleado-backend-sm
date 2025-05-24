@@ -14,11 +14,11 @@ import { logger } from '../../../../config/logger'; // Import logger
 
 export class EmployeeController {
   constructor(
-    private createEmployeeUseCase: CreateEmployee,
-    private getEmployeeByIdUseCase: GetEmployeeById,
-    private getAllEmployeesUseCase: GetAllEmployees,
-    private updateEmployeeUseCase: UpdateEmployee,
-    private deleteEmployeeUseCase: DeleteEmployee
+    private readonly createEmployeeUseCase: CreateEmployee,
+    private readonly getEmployeeByIdUseCase: GetEmployeeById,
+    private readonly getAllEmployeesUseCase: GetAllEmployees,
+    private readonly updateEmployeeUseCase: UpdateEmployee,
+    private readonly deleteEmployeeUseCase: DeleteEmployee
   ) {}
 
   // Helper to format validation errors
