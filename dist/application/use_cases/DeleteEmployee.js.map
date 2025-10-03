@@ -1,1 +1,0 @@
-{"version":3,"file":"DeleteEmployee.js","sourceRoot":"","sources":["../../../src/application/use_cases/DeleteEmployee.ts"],"names":[],"mappings":";;;;;;;;;;;;AAGA,MAAa,cAAc;IACzB,YAAoB,kBAAsC;QAAtC,uBAAkB,GAAlB,kBAAkB,CAAoB;IAAG,CAAC;IAExD,OAAO,CAAC,UAAkB;;YAC9B,OAAO,IAAI,CAAC,kBAAkB,CAAC,MAAM,CAAC,UAAU,CAAC,CAAC;QACpD,CAAC;KAAA;CACF;AAND,wCAMC"}
