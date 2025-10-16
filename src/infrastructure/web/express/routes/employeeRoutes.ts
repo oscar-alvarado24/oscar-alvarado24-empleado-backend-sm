@@ -23,7 +23,7 @@ export default (employeeController: EmployeeController): Router => {
     employeeController.update(req, res, next)
   );
 
-  router.delete('/:id', (req: Request, res: Response, next: NextFunction) =>
+  router.delete('/:id', requireCognitoGroup('pacientes'), (req: Request, res: Response, next: NextFunction) =>
     employeeController.delete(req, res, next)
   );
 

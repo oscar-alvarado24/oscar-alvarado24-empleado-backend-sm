@@ -32,7 +32,6 @@ export class CognitoJWTManager {
   static initialize(): void {
     if (this.isInitialized) return;
 
-    logger.info('🚀 Initializing Cognito JWT verifiers...');
     const userPoolId = process.env.COGNITO_USER_POOL_ID;
     const clientId = process.env.COGNITO_CLIENT_ID;
 
@@ -58,10 +57,6 @@ export class CognitoJWTManager {
       });
 
       this.isInitialized = true;
-      logger.info('✅ Cognito JWT verifiers initialized successfully', {
-        userPoolId: userPoolId.substring(0, 10) + '...',
-        clientId: clientId.substring(0, 10) + '...'
-      });
     } catch (error: any) {
       this.initializationError = error.message;
       logger.error('❌ Cognito verifier creation failed:', error);
@@ -84,19 +79,6 @@ export class CognitoJWTManager {
 
     try {
       const decoded = await this.accessTokenVerifier.verify(token);
-
-      // Log seguro - solo información no sensible
-      logger.info('✅ Token verified successfully', {
-        tokenUse: decoded.token_use,
-        username: decoded.username,
-        clientId: decoded.client_id,
-        issuer: decoded.iss,
-        issuedAt: new Date(decoded.iat * 1000).toISOString(),
-        expiresAt: new Date(decoded.exp * 1000).toISOString(),
-        groups: decoded['cognito:groups'] || [],
-        hasGroups: (decoded['cognito:groups'] || []).length > 0,
-        groupCount: (decoded['cognito:groups'] || []).length
-      });
 
       return decoded;
     } catch (error: any) {
@@ -155,11 +137,6 @@ export const authenticateCognitoToken = async (
 
     const decoded = await CognitoJWTManager.verifyAccessToken(token);
     req.user = decoded;
-
-    logger.info(`✅ Cognito user authenticated: ${decoded.username}`, {
-      username: decoded.username,
-      groups: decoded['cognito:groups'] || []
-    });
     next();
 
   } catch (error: any) {
@@ -210,8 +187,6 @@ export const authenticateCognitoToken = async (
 // Los demás métodos (requireCognitoGroup, excludeCognitoGroup) se mantienen igual...
 export const requireCognitoGroup = (...groups: string[]) => {
   return (req: CognitoAuthenticatedRequest, res: Response, next: NextFunction): void => {
-    logger.info(`🔐 Checking required Cognito groups: ${groups.join(', ')}`);
-    logger.info(`User groups: ${req.user ? (req.user['cognito:groups'] || []).join(', ') : 'No user info'}`);
     if (!req.user) {
       res.status(401).json({
         error: 'Authentication Required',
@@ -238,8 +213,6 @@ export const requireCognitoGroup = (...groups: string[]) => {
       });
       return;
     }
-
-    logger.info(`✅ User has required group access: ${userGroups.join(', ')}`);
     next();
   };
 };
