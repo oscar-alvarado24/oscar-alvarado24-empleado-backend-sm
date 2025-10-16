@@ -1,0 +1,178 @@
+{
+    // Use IntelliSense para saber los atributos posibles.
+    // Mantenga el puntero para ver las descripciones de los existentes atributos.
+    // Para más información, visite: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "🚀 Debug Clean (Auto Cache Clean)",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/server.ts",
+            "preLaunchTask": "🧹 Clean Cache & Kill Processes",
+            "runtimeArgs": [
+                "-r", 
+                "ts-node/register",
+                "-r",
+                "dotenv/config"
+            ],
+            "env": {
+                "NODE_ENV": "development",
+                "DOTENV_CONFIG_PATH": "${workspaceFolder}/.env",
+                "TS_NODE_CACHE": "false"
+            },
+            "envFile": "${workspaceFolder}/.env",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "restart": true,
+            "protocol": "inspector",
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/node_modules/**"
+            ],
+            "resolveSourceMapLocations": [
+                "${workspaceFolder}/**",
+                "!**/node_modules/**"
+            ]
+        },
+        {
+            "name": "🚀 Debug Microservice (Separate Variables)",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/server.ts",
+            "preLaunchTask": "⚡ Kill Node Processes",
+            "runtimeArgs": [
+                "-r", 
+                "ts-node/register",
+                "-r",
+                "dotenv/config"
+            ],
+            "env": {
+                "NODE_ENV": "development",
+                "DOTENV_CONFIG_PATH": "${workspaceFolder}/.env",
+                "DEBUG": "*mongo*",
+                "TS_NODE_CACHE": "false"
+            },
+            "envFile": "${workspaceFolder}/.env",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "restart": true,
+            "protocol": "inspector",
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/node_modules/**"
+            ],
+            "resolveSourceMapLocations": [
+                "${workspaceFolder}/**",
+                "!**/node_modules/**"
+            ]
+        },
+        {
+            "name": "🔄 Debug with Nodemon (Auto-restart)",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "nodemon",
+            "program": "${workspaceFolder}/src/server.ts",
+            "restart": true,
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/.env",
+            "env": {
+                "NODE_ENV": "development"
+            },
+            "cwd": "${workspaceFolder}",
+            "runtimeArgs": [
+                "--exec",
+                "node -r ts-node/register --inspect"
+            ],
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/node_modules/**"
+            ]
+        },
+        {
+            "name": "🏗️ Debug Compiled JS (Production-like)",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/dist/server.js",
+            "preLaunchTask": "npm: build",
+            "envFile": "${workspaceFolder}/.env",
+            "env": {
+                "NODE_ENV": "production"
+            },
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/node_modules/**"
+            ],
+            "outFiles": [
+                "${workspaceFolder}/dist/**/*.js"
+            ],
+            "sourceMaps": true
+        },
+        {
+            "name": "🧪 Debug Tests",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/node_modules/.bin/jest",
+            "args": [
+                "--runInBand",
+                "--detectOpenHandles",
+                "--forceExit"
+            ],
+            "envFile": "${workspaceFolder}/.env",
+            "env": {
+                "NODE_ENV": "test"
+            },
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/node_modules/**"
+            ]
+        },
+        {
+            "name": "🐛 Debug with Manual Env Load",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/server.ts",
+            "runtimeArgs": ["-r", "ts-node/register"],
+            "envFile": "${workspaceFolder}/.env",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "restart": true,
+            "preLaunchTask": {
+                "type": "shell",
+                "command": "echo",
+                "args": ["Loading environment variables..."]
+            },
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/node_modules/**"
+            ]
+        },
+        {
+            "name": "🔍 Attach to Process",
+            "type": "node",
+            "request": "attach",
+            "port": 9229,
+            "restart": true,
+            "localRoot": "${workspaceFolder}",
+            "remoteRoot": "${workspaceFolder}",
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/node_modules/**"
+            ]
+        }
+    ],
+    "compounds": [
+        {
+            "name": "🚀 Debug Full Stack",
+            "configurations": [
+                "🚀 Debug Microservice (ts-node)"
+            ],
+            "stopAll": true
+        }
+    ]
+}

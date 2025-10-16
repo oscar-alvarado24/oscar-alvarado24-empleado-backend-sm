@@ -1,3 +1,5 @@
+import { BadPositionException } from "../exceptions/BadPositionException";
+
 export enum Position {
     DOCTOR ='DOCTOR',
     ASSITANT = 'ASSITANT',
@@ -11,5 +13,5 @@ export function stringToEnum(value: string): Position {
     if (Object.values(Position).includes(value as Position)) {
       return value as Position;
     }
-    throw new Error(`El valor de "${value}" no es una opción válida para una posición`);
+    throw new BadPositionException(`El valor de "${value}" no es una opción válida para una posición`);
   }

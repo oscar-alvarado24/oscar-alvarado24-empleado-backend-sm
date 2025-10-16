@@ -1,11 +1,12 @@
 import validator from 'validator';
+import { BadEmailExceptions } from '../exceptions/BadEmailExceptions';
 
 export class Email {
   private readonly value: string;
 
   private constructor(email: string) {
     if (!Email.isValid(email)) {
-      throw new Error('Invalid email format');
+      throw new BadEmailExceptions('Invalid email format');
     }
     this.value = validator.normalizeEmail(email) || email;
   }

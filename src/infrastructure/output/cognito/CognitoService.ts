@@ -6,7 +6,7 @@ import {
     AdminListGroupsForUserCommand,
     AdminRemoveUserFromGroupCommand
 } from "@aws-sdk/client-cognito-identity-provider";
-import { logger } from "../../../config/logger";
+import { logger } from "../../config/logger";
 import { CreateCognitoUserError } from "../../helper/exceptions/CreateCognitoUserError";
 import { MESSAGE } from "../helper/constants/MessageExceptions";
 import { AddUserToGroupError } from "../../helper/exceptions/AddUserToGroupError";

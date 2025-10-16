@@ -2,7 +2,7 @@
 import { EmployeeRepository } from '../../domain/repositories/EmployeeRepository';
 
 export class DeleteEmployee {
-  constructor(private employeeRepository: EmployeeRepository) {}
+  constructor(private readonly employeeRepository: EmployeeRepository) {}
 
   async execute(employeeId: string): Promise<boolean> {
     return this.employeeRepository.delete(employeeId);

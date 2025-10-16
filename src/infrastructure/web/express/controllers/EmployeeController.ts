@@ -1,16 +1,18 @@
-// src/infrastructure/web/express/controllers/EmployeeController.ts
 import { Request, Response, NextFunction } from 'express';
-import { plainToInstance } from 'class-transformer';
+import { plainToInstance, instanceToPlain } from 'class-transformer';
 import { validate, ValidationError } from 'class-validator';
 import { CreateEmployee } from '../../../../application/use_cases/CreateEmployee';
 import { GetEmployeeById } from '../../../../application/use_cases/GetEmployeeById';
 import { GetAllEmployees } from '../../../../application/use_cases/GetAllEmployees';
 import { UpdateEmployee } from '../../../../application/use_cases/UpdateEmployee';
 import { DeleteEmployee } from '../../../../application/use_cases/DeleteEmployee';
-import { Employee } from '../../../../domain/entities/Employee'; // To type the result where appropriate
+import { Employee } from '../../../../domain/entities/Employee'; 
 import { CreateEmployeeDto } from '../../../../application/dtos/CreateEmployeeDto';
 import { UpdateEmployeeDto } from '../../../../application/dtos/UpdateEmployeeDto';
-import { logger } from '../../../../config/logger'; // Import logger
+import { logger } from '../../../config/logger'; 
+import { EmployeeResponse } from '../../../../application/dtos/EmployeeResponse';
+import { GetDoctors } from '../../../../application/use_cases/GetDoctors';
+import { DataDoctorProcedure } from '../../../../application/dtos/DataDoctorProcedure';
 
 export class EmployeeController {
   constructor(
@@ -18,10 +20,10 @@ export class EmployeeController {
     private readonly getEmployeeByIdUseCase: GetEmployeeById,
     private readonly getAllEmployeesUseCase: GetAllEmployees,
     private readonly updateEmployeeUseCase: UpdateEmployee,
-    private readonly deleteEmployeeUseCase: DeleteEmployee
+    private readonly deleteEmployeeUseCase: DeleteEmployee,
+    private readonly getDoctorsByIdListUseCase: GetDoctors
   ) {}
 
-  // Helper to format validation errors
   private formatValidationErrors(errors: ValidationError[]): any {
     return errors.map(err => {
       return { property: err.property, constraints: err.constraints };
@@ -29,7 +31,7 @@ export class EmployeeController {
   }
 
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
-    logger.info(`POST /api/v1/employees - Request Body: ${JSON.stringify(req.body)}`);
+    logger.info(`POST /api/v1/employees`);
     try {
       const createEmployeeDto = plainToInstance(CreateEmployeeDto, req.body);
       const errors = await validate(createEmployeeDto);
@@ -42,10 +44,13 @@ export class EmployeeController {
         });
         return;
       }
-
-      const employee: Employee = await this.createEmployeeUseCase.execute(createEmployeeDto);
-      logger.info(`Employee created successfully: ${employee.id}`);
-      res.status(201).json(employee);
+      const createEmployeeResult: EmployeeResponse | null = await this.createEmployeeUseCase.execute(createEmployeeDto);
+      if (!createEmployeeResult) {
+        logger.warn('Failed to create employee');
+        res.status(500).json({ message: 'Failed to create employee' });
+        return;
+      }
+      res.status(201).json(`Employee created successfully with id: ${createEmployeeDto.id}`);
     } catch (error: any) {
       logger.error(`Error in create employee: ${error.message}`, error);
       next(error);
@@ -75,13 +80,24 @@ export class EmployeeController {
     try {
       const employees: Employee[] = await this.getAllEmployeesUseCase.execute();
       logger.info(`Retrieved ${employees.length} employees`);
-      res.status(200).json(employees);
+      res.status(200).json(instanceToPlain( employees));
     } catch (error: any) {
       logger.error(`Error in get all employees: ${error.message}`, error);
       next(error);
     }
   }
 
+  async getDoctorsByIdList(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try{
+    const ids: string[] = typeof req.query.ids === 'string' ? req.query.ids.split(',') : [];
+    logger.info(`GET /api/v1/employees/doctors/by-id-list with IDs: ${ids.join(',')}`);
+    const doctors: DataDoctorProcedure[] = await this.getDoctorsByIdListUseCase.execute(ids);
+    res.status(200).json(doctors);
+    } catch (error: any) {
+      logger.error(`Error in get doctors by ID list: ${error.message}`, error);
+      next(error);
+    }
+  }
   async update(req: Request, res: Response, next: NextFunction): Promise<void> {
     const employeeId: string = req.params.id;
     logger.info(`PUT /api/v1/employees/${employeeId} - Request Body: ${JSON.stringify(req.body)}`);
@@ -136,3 +152,4 @@ export class EmployeeController {
     }
   }
 }
+

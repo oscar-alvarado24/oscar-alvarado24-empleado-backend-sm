@@ -1,40 +1,16 @@
-// src/application/use_cases/CreateEmployee.ts
-import { logger } from '../../config/logger';
-import { Employee, EmployeeProps } from '../../domain/entities/Employee'; // Import EmployeeProps
+import { logger } from '../../infrastructure/config/logger';
 import { EmployeeRepository } from '../../domain/repositories/EmployeeRepository';
-import { Email } from '../../domain/value-objects/Email'; // Import Email
-import { stringToEnum } from '../../domain/value-objects/Position'; // Import Position and stringToEnum
-import { CreateEmployeeDto } from '../dtos/CreateEmployeeDto'; // Import CreateEmployeeDto
+import { CreateEmployeeDto } from '../dtos/CreateEmployeeDto'; 
+import { EmployeeMapper } from '../mapper/EmployeeMapper';
+import { EmployeeResponse } from '../dtos/EmployeeResponse';
 
-// The CreateEmployeeData interface is removed as CreateEmployeeDto is used.
 
 export class CreateEmployee {
   constructor(private readonly employeeRepository: EmployeeRepository) { }
 
-  async execute(employeeDto: CreateEmployeeDto): Promise<Employee> {
-    // Constructing EmployeeProps explicitly from employeeDto:
+  async execute(employeeDto: CreateEmployeeDto): Promise<EmployeeResponse> {
     try {
-      const employeeProps: EmployeeProps = {
-        id: undefined, // Use undefined for new entities, EmployeeProps expects 'number | undefined'
-        firstName: employeeDto.firstName,
-        firstSurName: employeeDto.lastName, // Assuming DTO's lastName maps to domain's firstSurName
-        secondName: employeeDto.secondName,
-        secondSurName: employeeDto.secondSurName,
-        email: Email.create(employeeDto.email), // Create Email value object from DTO
-        position: stringToEnum(employeeDto.position), // Create Position value object from DTO
-        department: employeeDto.department,
-        address: employeeDto.address, // No longer need 'as any' since CreateEmployeeDto is updated
-        cellPhone: employeeDto.cellPhone, // No longer need 'as any'
-        residencesType: employeeDto.residencesType, // No longer need 'as any'
-        neighborhood: employeeDto.neighborhood, // No longer need 'as any'
-        empresa: employeeDto.empresa, // No longer need 'as any'
-        landline: employeeDto.landline,
-        descriptionResidence: employeeDto.descriptionResidence,
-        // photo, createdAt, updatedAt are typically not set at creation via DTO
-      };
-
-      const employeeToCreate = new Employee(employeeProps);
-      return this.employeeRepository.save(employeeToCreate);
+      return EmployeeMapper.toEmployeeResponse(await this.employeeRepository.save(EmployeeMapper.toEmployeeFromCreateDto(employeeDto)));
     } catch (error) {
       logger.error('Error creating employee:', error);
       throw new Error('Error creating employee');

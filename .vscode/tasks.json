@@ -1,0 +1,94 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "🧹 Clean Cache & Kill Processes",
+            "type": "shell",
+            "windows": {
+                "command": "powershell",
+                "args": [
+                    "-Command",
+                    "Write-Host '🔄 Cleaning cache and killing Node processes...'; taskkill /f /im node.exe /t 2>$null; Start-Sleep -Seconds 1; Remove-Item -Recurse -Force node_modules\\.cache\\ -ErrorAction SilentlyContinue; Write-Host '✅ Cache cleaned and processes killed'"
+                ]
+            },
+            "linux": {
+                "command": "bash",
+                "args": [
+                    "-c",
+                    "echo '🔄 Cleaning cache and killing Node processes...'; pkill node 2>/dev/null || true; sleep 1; rm -rf node_modules/.cache/ 2>/dev/null || true; echo '✅ Cache cleaned and processes killed'"
+                ]
+            },
+            "osx": {
+                "command": "bash", 
+                "args": [
+                    "-c",
+                    "echo '🔄 Cleaning cache and killing Node processes...'; pkill node 2>/dev/null || true; sleep 1; rm -rf node_modules/.cache/ 2>/dev/null || true; echo '✅ Cache cleaned and processes killed'"
+                ]
+            },
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🧹 Clean Cache Only",
+            "type": "shell",
+            "windows": {
+                "command": "powershell",
+                "args": [
+                    "-Command",
+                    "Write-Host '🔄 Cleaning ts-node cache...'; Remove-Item -Recurse -Force node_modules\\.cache\\ -ErrorAction SilentlyContinue; Write-Host '✅ Cache cleaned'"
+                ]
+            },
+            "linux": {
+                "command": "bash",
+                "args": ["-c", "echo '🔄 Cleaning ts-node cache...'; rm -rf node_modules/.cache/ 2>/dev/null || true; echo '✅ Cache cleaned'"]
+            },
+            "osx": {
+                "command": "bash",
+                "args": ["-c", "echo '🔄 Cleaning ts-node cache...'; rm -rf node_modules/.cache/ 2>/dev/null || true; echo '✅ Cache cleaned'"]
+            },
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "⚡ Kill Node Processes",
+            "type": "shell",
+            "windows": {
+                "command": "powershell",
+                "args": [
+                    "-Command", 
+                    "Write-Host '🔄 Killing Node processes...'; taskkill /f /im node.exe /t 2>$null; Start-Sleep -Seconds 2; Write-Host '✅ Node processes killed'"
+                ]
+            },
+            "linux": {
+                "command": "bash",
+                "args": ["-c", "echo '🔄 Killing Node processes...'; pkill node 2>/dev/null || true; sleep 2; echo '✅ Node processes killed'"]
+            },
+            "osx": {
+                "command": "bash",
+                "args": ["-c", "echo '🔄 Killing Node processes...'; pkill node 2>/dev/null || true; sleep 2; echo '✅ Node processes killed'"]
+            },
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        }
+    ]
+}

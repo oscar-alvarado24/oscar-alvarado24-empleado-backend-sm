@@ -12,6 +12,7 @@
     "module": "commonjs",                                
     "rootDir": "./src",                                  
     "moduleResolution": "node",                          
+    "ignoreDeprecations": "6.0",
     "resolveJsonModule": true,                           
   
     /* JavaScript Support */

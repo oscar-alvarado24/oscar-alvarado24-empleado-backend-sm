@@ -57,5 +57,9 @@ export class UpdateEmployeeDto {
 
   @IsOptional()
   @IsNumber({}, { message: 'Empresa ID must be a number if provided' })
-  empresa?: number;
+  company?: number;
+
+  @IsOptional()
+  @IsNumber({}, { message: 'Workplace ID must be a number if provided' })
+  workplace?: number;
 }

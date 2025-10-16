@@ -2,10 +2,18 @@
 import { IsNotEmpty, IsString, IsEmail, IsOptional, IsNumber } from 'class-validator';
 
 export class CreateEmployeeDto {
+  @IsNotEmpty({ message: 'ID should not be empty' })
+  @IsNumber({}, { message: 'ID must be a number' })
+  id!: number;
+
   @IsNotEmpty({ message: 'First name should not be empty' })
   @IsString()
   firstName!: string;
-
+  
+  @IsOptional()
+  @IsString()
+  secondName?: string;
+  
   @IsNotEmpty({ message: 'Last name should not be empty' })
   @IsString()
   lastName!: string;
@@ -17,18 +25,6 @@ export class CreateEmployeeDto {
   @IsNotEmpty({ message: 'Position should not be empty' })
   @IsString()
   position!: string;
-
-  @IsNotEmpty({ message: 'Department should not be empty' })
-  @IsString()
-  department!: string;
-
-  @IsOptional()
-  @IsString()
-  secondName?: string;
-
-  @IsOptional()
-  @IsString()
-  secondSurName?: string;
 
   @IsOptional()
   @IsString()
@@ -54,7 +50,15 @@ export class CreateEmployeeDto {
   @IsString()
   neighborhood!: string;
 
-  @IsNotEmpty({ message: 'Empresa ID should not be empty' })
-  @IsNumber({}, { message: 'Empresa ID must be a number' })
-  empresa!: number;
+  @IsNotEmpty({ message: 'Company ID should not be empty' })
+  @IsNumber({}, { message: 'Company ID must be a number' })
+  company!: number;
+
+  @IsNotEmpty({ message: 'Workplace ID should not be empty' })
+  @IsString({ message: 'Workplace ID must be a string' })
+  workplace!: string;
+
+  @IsOptional()
+  @IsString()
+  specialty?: string;
 }

@@ -5,249 +5,206 @@ import { BadEmailExceptions } from "../exceptions/BadEmailExceptions";
 import { Expose } from "class-transformer";
 
 export interface EmployeeProps {
-  id?: number;
+  id: number;
   email: Email;
   firstName: string;
-  secondName?: string; // Already exists
-  firstSurName: string;
-  secondSurName?: string; // Already exists
+  secondName?: string;
+  lastName: string;
   address: string;
-  landline?: string; // Already exists
+  landline?: string;
   cellPhone: string;
   residencesType: string;
-  descriptionResidence?: string; // Already exists
+  descriptionResidence?: string;
   neighborhood: string;
   photo?: string;
   position: Position;
-  empresa: number;
-  // Ensure all required fields from the prompt are here
-  // department is missing in EmployeeProps, but was in the prompt's simpler Employee class.
-  // For now, I will stick to what's in EmployeeProps and the prompt's new fields.
-  // The prompt's new fields: secondName, secondSurName, landline, descriptionResidence
-  // all seem to be already present or match existing fields.
-  // Let's double check the prompt's example:
-  // secondName?: string;
-  // secondSurName?: string;
-  // landline?: string;
-  // descriptionResidence?: string;
-  // These are already in EmployeeProps.
-  // The original prompt also had:
-  // id: string | null, (EmployeeProps has id?: number)
-  // firstName: string, (EmployeeProps has firstName: string)
-  // lastName: string, (EmployeeProps has firstSurName: string and secondSurName?: string) - this is a mismatch to address
-  // email: string, (EmployeeProps has email: Email)
-  // position: string, (EmployeeProps has position: Position)
-  // department: string, (EmployeeProps is missing department)
-  // createdAt?: Date, (EmployeeProps is missing createdAt)
-  // updatedAt?: Date (EmployeeProps is missing updatedAt)
-
-  // It seems the existing EmployeeProps is more detailed.
-  // I will add department, createdAt, and updatedAt to EmployeeProps for consistency with the prompt's target state.
-  // And adjust lastName. The prompt used 'lastName', this file uses 'firstSurName' and 'secondSurName'.
-  // I will assume 'firstSurName' is the primary 'lastName'.
-
-  department: string; // Added from prompt
-  createdAt?: Date; // Added from prompt
-  updatedAt?: Date; // Added from prompt
+  specialty?: string;
+  company: number;
+  workplace: string;
+  active?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
-export class Employee { // Renamed from EmployeeEntity
-  private props: EmployeeProps; // Removed readonly
+export class Employee {
+  private readonly employee: EmployeeProps;
 
-  constructor(props: EmployeeProps) {
-    this.props = props;
+  constructor(employee: EmployeeProps) {
+    this.employee = employee;
     this.validate();
   }
 
   private validate(): void {
-    if (!this.esCorreoValido(this.props.email.toString())) {
+    if (!this.esCorreoValido(this.employee.email.toString())) {
       throw new BadEmailExceptions("El correo electrónico no es válido.");
     }
   }
-  esCorreoValido (email: string): boolean {
+  esCorreoValido(email: string): boolean {
     const dominio = email.split("@")[1]?.toLowerCase();
     return Object.values(EMAIL_DOMAINS).includes(dominio as any);
   };
 
   // Getters
   @Expose()
-  get id(): number | undefined {
-    return this.props.id;
+  get id(): number {
+    return this.employee.id;
   }
 
   @Expose()
   get email(): string {
-    return this.props.email.toString();
+    return this.employee.email.toString();
   }
 
   @Expose()
   get firstName(): string {
-    return this.props.firstName;
-  }
-
-  @Expose()
-  get fullName(): string {
-    return `${this.props.firstName} ${this.props.firstSurName}`;
+    return this.employee.firstName;
   }
 
   @Expose()
   get lastName(): string {
-    return this.props.firstSurName;
+    return this.employee.lastName;
   }
-
-  // Getters for the new fields (secondName, secondSurName, landline, descriptionResidence)
-  // are already effectively present.
 
   @Expose()
   get secondName(): string | undefined {
-    return this.props.secondName;
-  }
-
-  @Expose()
-  get firstSurName(): string { // This is effectively 'lastName' from the prompt's perspective
-    return this.props.firstSurName;
-  }
-
-  @Expose()
-  get secondSurName(): string | undefined {
-    return this.props.secondSurName;
+    return this.employee.secondName;
   }
 
   @Expose()
   get address(): string {
-    return this.props.address;
+    return this.employee.address;
   }
 
   @Expose()
   get landline(): string | undefined {
-    return this.props.landline;
+    return this.employee.landline;
   }
 
   @Expose()
   get cellPhone(): string {
-    return this.props.cellPhone;
+    return this.employee.cellPhone;
   }
 
   @Expose()
   get residencesType(): string {
-    return this.props.residencesType;
+    return this.employee.residencesType;
   }
 
   @Expose()
   get descriptionResidence(): string | undefined {
-    return this.props.descriptionResidence;
-  }
-
-  // Getter for department
-  @Expose()
-  get department(): string {
-    return this.props.department;
+    return this.employee.descriptionResidence;
   }
 
   @Expose()
   get neighborhood(): string {
-    return this.props.neighborhood;
+    return this.employee.neighborhood;
   }
 
   @Expose()
   get photo(): string | undefined {
-    return this.props.photo;
-  }
-
-  @Expose() 
-  get position(): string {
-    return this.props.position.toString();
+    return this.employee.photo;
   }
 
   @Expose()
-  get empresa(): number {
-    return this.props.empresa;
+  get position(): string {
+    return this.employee.position.toString();
   }
 
-  // Getters for createdAt and updatedAt
+  @Expose()
+  get specialty(): string | undefined {
+    return this.employee.specialty;
+  }
+
+  @Expose()
+  get company(): number {
+    return this.employee.company;
+  }
+
+  @Expose()
+  get workplace(): string {
+    return this.employee.workplace;
+  }
+
+  @Expose()
+  get active(): boolean {
+    return this.employee.active ?? false;
+  }
+
+
   @Expose()
   get createdAt(): Date | undefined {
-    return this.props.createdAt;
+    return this.employee.createdAt;
   }
 
   @Expose()
   get updatedAt(): Date | undefined {
-    return this.props.updatedAt;
+    return this.employee.updatedAt;
   }
 
-  
   setFirstName(firstName: string): Employee {
     return new Employee({
-      ...this.props,
+      ...this.employee,
       firstName
     });
   }
 
   setSecondName(secondName: string): Employee {
     return new Employee({
-      ...this.props,
+      ...this.employee,
       secondName
     });
   }
 
-  setFirstSurName(firstSurName: string): Employee {
+  setLastName(lastName: string): Employee {
     return new Employee({
-      ...this.props,
-      firstSurName
+      ...this.employee,
+      lastName
     });
   }
-
-  setSecondSurName(secondSurName: string): Employee {
-    return new Employee({
-      ...this.props,
-      secondSurName
-    });
-  }
-
   setEmail(email: string): Employee {
     return new Employee({
-      ...this.props,
+      ...this.employee,
       email: Email.create(email)
     });
   }
   setAddress(address: string): Employee {
     return new Employee({
-      ...this.props,
+      ...this.employee,
       address
     });
   }
 
   setLandline(landline: string): Employee {
     return new Employee({
-      ...this.props,
+      ...this.employee,
       landline
     });
   }
 
   setCellPhone(cellPhone: string): Employee {
     return new Employee({
-      ...this.props,
+      ...this.employee,
       cellPhone
     });
   }
 
   setResidencesType(residencesType: string): Employee {
     return new Employee({
-      ...this.props,
+      ...this.employee,
       residencesType
     });
   }
 
   setDescriptionResidence(descriptionResidence: string): Employee {
     return new Employee({
-      ...this.props,
+      ...this.employee,
       descriptionResidence
     });
   }
 
   setNeighborhood(neighborhood: string): Employee {
     return new Employee({
-      ...this.props,
+      ...this.employee,
       neighborhood
     });
   }
@@ -255,7 +212,7 @@ export class Employee { // Renamed from EmployeeEntity
 
   setPhoto(photo: string): Employee {
     return new Employee({
-      ...this.props,
+      ...this.employee,
       photo
     });
   }
@@ -263,46 +220,43 @@ export class Employee { // Renamed from EmployeeEntity
   setPosition(position: string): Employee {
     const positionNew = stringToEnum(position);
     return new Employee({
-      ...this.props,
+      ...this.employee,
       position: positionNew
     });
   }
 
-  // Setter for department
-  setDepartment(department: string): Employee {
+  setActive(active: boolean): Employee {
     return new Employee({
-      ...this.props,
-      department
-    });
-  }
-
-  // Setters for createdAt and updatedAt (if needed, usually these are set by DB)
-  setCreatedAt(createdAt: Date): Employee {
-    return new Employee({
-      ...this.props,
-      createdAt
+      ...this.employee,
+      active
     });
   }
 
   setUpdatedAt(updatedAt: Date): Employee {
     return new Employee({
-      ...this.props,
+      ...this.employee,
       updatedAt
     });
   }
 
-  setEmpresa(empresa: number): Employee {
+  setEmpresa(company: number): Employee {
     return new Employee({
-      ...this.props,
-      empresa
+      ...this.employee,
+      company
     });
   }
 
-  // Método para crear una copia actualizada del empleado
-  update(props: Partial<EmployeeProps>): Employee {
+  setWorkplace(workplace: string): Employee {
     return new Employee({
-      ...this.props,
-      ...props
+      ...this.employee,
+      workplace
+    });
+  }
+
+  update(employee: Partial<EmployeeProps>): Employee {
+    return new Employee({
+      ...this.employee,
+      ...employee
     });
   }
 }

@@ -3,7 +3,7 @@ import { Employee } from '../../domain/entities/Employee';
 import { EmployeeRepository } from '../../domain/repositories/EmployeeRepository';
 
 export class GetEmployeeById {
-  constructor(private employeeRepository: EmployeeRepository) {}
+  constructor(private readonly employeeRepository: EmployeeRepository) {}
 
   async execute(employeeId: string): Promise<Employee | null> {
     return this.employeeRepository.findById(employeeId);

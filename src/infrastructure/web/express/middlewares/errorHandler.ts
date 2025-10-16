@@ -1,4 +1,3 @@
-// src/infrastructure/web/express/middlewares/errorHandler.ts
 import { Request, Response, NextFunction } from 'express';
 
 // Interface for common error properties
@@ -19,7 +18,7 @@ interface ClassValidationError {
   children?: ClassValidationError[];
 }
 
-import { logger } from '../../../../config/logger'; // Import logger
+import { logger } from '../../../config/logger'; // Import logger
 
 export function errorHandler(err: AppError | ClassValidationError[], req: Request, res: Response, next: NextFunction): void { // Return type void
   if (Array.isArray(err) && err.length > 0 && 'property' in err[0] && 'constraints' in err[0]) {
@@ -41,10 +40,10 @@ export function errorHandler(err: AppError | ClassValidationError[], req: Reques
       stack: appErr.stack,
       statusCode: appErr.statusCode,
       name: appErr.name,
-      path: appErr.path, // Mongoose CastError path
-      code: appErr.code, // Mongoose duplicate key error code
-      keyValue: appErr.keyValue, // Mongoose duplicate key error keyValue
-      mongooseErrors: appErr.errors, // Mongoose validation errors
+      path: appErr.path, 
+      code: appErr.code, 
+      keyValue: appErr.keyValue, 
+      mongooseErrors: appErr.errors, 
       requestPath: req.path,
       requestMethod: req.method,
     });
