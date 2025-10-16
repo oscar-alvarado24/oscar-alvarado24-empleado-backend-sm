@@ -3,14 +3,14 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import helmet from 'helmet';
 import connectDB from './infrastructure/database/connect';
-import employeeRoutes from './infrastructure/web/express/routes/employeeRoutes';
-import { EmployeeController } from './infrastructure/web/express/controllers/EmployeeController';
-import { errorHandler } from './infrastructure/web/express/middlewares/errorHandler';
+import employeeRoutes from './infrastructure/output/web/express/routes/employeeRoutes';
+import { EmployeeController } from './infrastructure/output/web/express/controllers/EmployeeController';
+import { errorHandler } from './infrastructure/output/web/express/middlewares/errorHandler';
 
 // Load environment variables
 dotenv.config();
 
-import { corsOptions, corsDevOptions, helmetOptions, simpleRateLimit } from './infrastructure/web/express/middlewares/security';
+import { corsOptions, corsDevOptions, helmetOptions, simpleRateLimit } from './infrastructure/output/web/express/middlewares/security';
 
 
 // Import Repositories

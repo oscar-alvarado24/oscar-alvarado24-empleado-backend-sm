@@ -1,18 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
 import { plainToInstance, instanceToPlain } from 'class-transformer';
 import { validate, ValidationError } from 'class-validator';
-import { CreateEmployee } from '../../../../application/use_cases/CreateEmployee';
-import { GetEmployeeById } from '../../../../application/use_cases/GetEmployeeById';
-import { GetAllEmployees } from '../../../../application/use_cases/GetAllEmployees';
-import { UpdateEmployee } from '../../../../application/use_cases/UpdateEmployee';
-import { DeleteEmployee } from '../../../../application/use_cases/DeleteEmployee';
-import { Employee } from '../../../../domain/entities/Employee'; 
-import { CreateEmployeeDto } from '../../../../application/dtos/CreateEmployeeDto';
-import { UpdateEmployeeDto } from '../../../../application/dtos/UpdateEmployeeDto';
-import { logger } from '../../../config/logger'; 
-import { EmployeeResponse } from '../../../../application/dtos/EmployeeResponse';
-import { GetDoctors } from '../../../../application/use_cases/GetDoctors';
-import { DataDoctorProcedure } from '../../../../application/dtos/DataDoctorProcedure';
+import { CreateEmployee } from '../../../../../application/use_cases/CreateEmployee';
+import { GetEmployeeById } from '../../../../../application/use_cases/GetEmployeeById';
+import { GetAllEmployees } from '../../../../../application/use_cases/GetAllEmployees';
+import { UpdateEmployee } from '../../../../../application/use_cases/UpdateEmployee';
+import { DeleteEmployee } from '../../../../../application/use_cases/DeleteEmployee';
+import { Employee } from '../../../../../domain/entities/Employee'; 
+import { CreateEmployeeDto } from '../../../../../application/dtos/CreateEmployeeDto';
+import { UpdateEmployeeDto } from '../../../../../application/dtos/UpdateEmployeeDto';
+import { logger } from '../../../../config/logger'; 
+import { EmployeeResponse } from '../../../../../application/dtos/EmployeeResponse';
+import { GetDoctors } from '../../../../../application/use_cases/GetDoctors';
+import { DataDoctorProcedure } from '../../../../../application/dtos/DataDoctorProcedure';
 
 export class EmployeeController {
   constructor(

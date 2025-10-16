@@ -18,7 +18,7 @@ interface ClassValidationError {
   children?: ClassValidationError[];
 }
 
-import { logger } from '../../../config/logger'; // Import logger
+import { logger } from '../../../../config/logger'; // Import logger
 
 export function errorHandler(err: AppError | ClassValidationError[], req: Request, res: Response, next: NextFunction): void { // Return type void
   if (Array.isArray(err) && err.length > 0 && 'property' in err[0] && 'constraints' in err[0]) {

@@ -1,6 +1,6 @@
 import { CognitoJwtVerifier } from 'aws-jwt-verify';
 import { Request, Response, NextFunction } from 'express';
-import { logger } from '../../../config/logger';
+import { logger } from '../../../../config/logger';
 
 // Extender Request para incluir user info de Cognito
 export interface CognitoAuthenticatedRequest extends Request {
