@@ -6,10 +6,10 @@ import { GetEmployeeById } from '../../../../../application/use_cases/GetEmploye
 import { GetAllEmployees } from '../../../../../application/use_cases/GetAllEmployees';
 import { UpdateEmployee } from '../../../../../application/use_cases/UpdateEmployee';
 import { DeleteEmployee } from '../../../../../application/use_cases/DeleteEmployee';
-import { Employee } from '../../../../../domain/entities/Employee'; 
+import { Employee } from '../../../../../domain/entities/Employee';
 import { CreateEmployeeDto } from '../../../../../application/dtos/CreateEmployeeDto';
 import { UpdateEmployeeDto } from '../../../../../application/dtos/UpdateEmployeeDto';
-import { logger } from '../../../../config/logger'; 
+import { logger } from '../../../../config/logger';
 import { EmployeeResponse } from '../../../../../application/dtos/EmployeeResponse';
 import { GetDoctors } from '../../../../../application/use_cases/GetDoctors';
 import { DataDoctorProcedure } from '../../../../../application/dtos/DataDoctorProcedure';
@@ -21,8 +21,8 @@ export class EmployeeController {
     private readonly getAllEmployeesUseCase: GetAllEmployees,
     private readonly updateEmployeeUseCase: UpdateEmployee,
     private readonly deleteEmployeeUseCase: DeleteEmployee,
-    private readonly getDoctorsByIdListUseCase: GetDoctors
-  ) {}
+    private readonly getDoctorsByIdListUseCase: GetDoctors,
+  ) { }
 
   private formatValidationErrors(errors: ValidationError[]): any {
     return errors.map(err => {
@@ -38,9 +38,9 @@ export class EmployeeController {
 
       if (errors.length > 0) {
         logger.warn('Validation failed for create employee', { errors: this.formatValidationErrors(errors) });
-        res.status(400).json({ 
-          message: 'Validation failed', 
-          errors: this.formatValidationErrors(errors) 
+        res.status(400).json({
+          message: 'Validation failed',
+          errors: this.formatValidationErrors(errors)
         });
         return;
       }
@@ -80,7 +80,7 @@ export class EmployeeController {
     try {
       const employees: Employee[] = await this.getAllEmployeesUseCase.execute();
       logger.info(`Retrieved ${employees.length} employees`);
-      res.status(200).json(instanceToPlain( employees));
+      res.status(200).json(instanceToPlain(employees));
     } catch (error: any) {
       logger.error(`Error in get all employees: ${error.message}`, error);
       next(error);
@@ -88,11 +88,17 @@ export class EmployeeController {
   }
 
   async getDoctorsByIdList(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try{
-    const ids: string[] = typeof req.query.ids === 'string' ? req.query.ids.split(',') : [];
-    logger.info(`GET /api/v1/employees/doctors/by-id-list with IDs: ${ids.join(',')}`);
-    const doctors: DataDoctorProcedure[] = await this.getDoctorsByIdListUseCase.execute(ids);
-    res.status(200).json(doctors);
+    try {
+      const idsEncrypted = typeof req.query.ids === 'string' ? req.query.ids : null;
+      if (!idsEncrypted) {
+        logger.warn('No IDs provided for get doctors by ID list');
+        res.status(400).json({ message: 'No IDs provided' });
+        return;
+      }
+
+      const doctors: DataDoctorProcedure[] = await this.getDoctorsByIdListUseCase.execute(idsEncrypted);
+
+      res.status(200).json(doctors);
     } catch (error: any) {
       logger.error(`Error in get doctors by ID list: ${error.message}`, error);
       next(error);
@@ -107,9 +113,9 @@ export class EmployeeController {
 
       if (errors.length > 0) {
         logger.warn(`Validation failed for update employee ${employeeId}`, { errors: this.formatValidationErrors(errors) });
-        res.status(400).json({ 
-          message: 'Validation failed for update', 
-          errors: this.formatValidationErrors(errors) 
+        res.status(400).json({
+          message: 'Validation failed for update',
+          errors: this.formatValidationErrors(errors)
         });
         return;
       }
@@ -119,7 +125,7 @@ export class EmployeeController {
         res.status(400).json({ message: 'No update data provided' });
         return;
       }
-      
+
       const employee: Employee | null = await this.updateEmployeeUseCase.execute(employeeId, updateEmployeeDto);
       if (employee) {
         logger.info(`Employee updated successfully: ${employeeId}`);

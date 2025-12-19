@@ -1,14 +1,18 @@
 // src/infrastructure/web/express/routes/employeeRoutes.ts
 import { Router, Request, Response, NextFunction } from 'express';
-import { EmployeeController } from '../controllers/EmployeeController'; 
+import { EmployeeController } from '../controllers/EmployeeController';
 import { authenticateCognitoToken, requireCognitoGroup } from '../middlewares/cognitoAuth';
 
 export default (employeeController: EmployeeController): Router => {
   const router = Router();
 
   router.use(authenticateCognitoToken);
-  router.post('/', requireCognitoGroup('pacientes'), (req: Request, res: Response, next: NextFunction) => 
+  router.post('/save', requireCognitoGroup('pacientes'), (req: Request, res: Response, next: NextFunction) =>
     employeeController.create(req, res, next)
+  );
+
+  router.get('/doctors/by-id-list', requireCognitoGroup('pacientes'), (req: Request, res: Response, next: NextFunction) =>
+    employeeController.getDoctorsByIdList(req, res, next)
   );
 
   router.get('/:id', requireCognitoGroup('pacientes'), (req: Request, res: Response, next: NextFunction) =>
@@ -25,10 +29,6 @@ export default (employeeController: EmployeeController): Router => {
 
   router.delete('/:id', requireCognitoGroup('pacientes'), (req: Request, res: Response, next: NextFunction) =>
     employeeController.delete(req, res, next)
-  );
-
-  router.get('/doctors/by-id-list', requireCognitoGroup('pacientes'), (req: Request, res: Response, next: NextFunction) =>
-    employeeController.getDoctorsByIdList(req, res, next)
   );
   return router;
 };

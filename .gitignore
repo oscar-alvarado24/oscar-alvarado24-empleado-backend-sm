@@ -4,3 +4,5 @@ dist/
 .scannerwork
 
 .env
+# deploiment files
+deployment/

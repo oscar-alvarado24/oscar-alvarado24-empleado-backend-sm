@@ -1,32 +1,69 @@
 import { Request, Response, NextFunction } from 'express';
-
+import { logger } from '../../../../config/logger';
 // CORS Configuration
 export const corsOptions = {
   origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
-    // Lista de dominios permitidos
+   logger.debug('=== CORS DEBUG ===');
+   logger.debug('Origin recibido:', origin);
+   logger.debug('NODE_ENV:', process.env.NODE_ENV);
+   logger.debug('==================');
+    // Lista de dominios/patrones permitidos
     const allowedOrigins = [
-      'http://localhost:3000',     // React dev
-      'http://localhost:3001',     // Otro puerto local
-      'http://localhost:4200',     // Angular dev
-      'https://tu-frontend.com',   // Producción
-      'https://tu-app.vercel.app', // Vercel
-      // Agrega más según necesites
+      /^https:\/\/.*\.execute-api\.us-east-1\.amazonaws\.com$/,
+      /^https?:\/\/.*\.elb\.us-east-1\.amazonaws\.com$/,
+      /^https:\/\/.*\.amplifyapp\.com$/
     ];
 
-    // En desarrollo, permite requests sin origin (Postman, etc.)
+
+    // En desarrollo, permite requests sin origin (Postman, curl, etc.)
     if (!origin && process.env.NODE_ENV === 'development') {
       return callback(null, true);
     }
 
-    if (origin && allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
+    // Permite orígenes locales en desarrollo
+    if (process.env.NODE_ENV === 'development' && origin ) {
+      return callback(null, true);
     }
+
+    // Verifica si el origin coincide con algún patrón de producción
+    if (origin) {
+      const isAllowed = allowedOrigins.some(allowed => {
+        if (allowed instanceof RegExp) {
+          return allowed.test(origin);
+        }
+        return allowed === origin;
+      });
+
+      if (isAllowed) {
+        return callback(null, true);
+      }
+    }
+
+    callback(new Error('Not allowed by CORS'));
   },
-  credentials: true, // Permite cookies y headers de auth
-  optionsSuccessStatus: 200, // Para IE11
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  credentials: true,
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: [
+    'Origin',
+    'X-Requested-With',
+    'Content-Type',
+    'Accept',
+    'Authorization',
+    'Cache-Control',
+    'X-Forwarded-For',
+    'X-Real-IP',
+  ],
+  exposedHeaders: ['Accept'],
+  maxAge: 86400,
+};
+
+
+export const corsDevOptions = {
+  origin: true,
+  credentials: true,
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: [
     'Origin',
     'X-Requested-With',
@@ -36,27 +73,8 @@ export const corsOptions = {
     'Cache-Control',
     'Pragma',
   ],
-  exposedHeaders: ['Authorization'], // Headers que el frontend puede leer
 };
 
-// CORS más permisivo para desarrollo
-export const corsDevOptions = {
-  origin: true, // Permite cualquier origen
-  credentials: true,
-  optionsSuccessStatus: 200,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: [
-    'Origin',
-    'X-Requested-With', 
-    'Content-Type',
-    'Accept',
-    'Authorization',
-    'Cache-Control',
-    'Pragma',
-  ],
-};
-
-// Helmet configuration para seguridad adicional
 export const helmetOptions = {
   contentSecurityPolicy: {
     directives: {
@@ -66,28 +84,25 @@ export const helmetOptions = {
       imgSrc: ["'self'", "data:", "https:"],
     },
   },
-  crossOriginEmbedderPolicy: false, // Puede causar problemas con algunos frontends
+  crossOriginEmbedderPolicy: false,
 };
 
-// Rate limiting middleware simple
 const requestCounts = new Map();
 
 export const simpleRateLimit = (
-  windowMs: number = 15 * 60 * 1000, // 15 minutos
-  max: number = 100 // max requests por ventana
+  windowMs: number = 15 * 60 * 1000,
+  max: number = 100
 ): ((req: Request, res: Response, next: NextFunction) => void) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     const clientIP = req.ip || req.socket.remoteAddress || 'unknown';
     const now = Date.now();
     const windowStart = now - windowMs;
 
-    // Limpiar requests antiguos
     if (requestCounts.has(clientIP)) {
       const requests = requestCounts.get(clientIP)!.filter((time: number) => time > windowStart);
       requestCounts.set(clientIP, requests);
     }
 
-    // Obtener requests actuales
     const requests = requestCounts.get(clientIP) || [];
 
     if (requests.length >= max) {
@@ -99,7 +114,6 @@ export const simpleRateLimit = (
       return;
     }
 
-    // Agregar request actual
     requests.push(now);
     requestCounts.set(clientIP, requests);
 

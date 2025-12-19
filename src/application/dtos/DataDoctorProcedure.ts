@@ -1,18 +1,18 @@
 export class DataDoctorProcedure {
-    id: number
+    id: string
     name: string
-    company: number;
+    company: string;
     workplace: string;
     specialty: string;
 
     constructor(
-        id: number | string,
+        id: string,
         name: string,
-        company: number,
+        company: string,
         workplace: string,
         specialty: string
     ) {
-        this.id = typeof id === 'string' ? Number(id) : id;;
+        this.id =  id;;
         this.name = name;
         this.company = company;
         this.workplace = workplace;
@@ -20,7 +20,7 @@ export class DataDoctorProcedure {
     }
     toJSON() {
         return {
-            id: Number(this.id),
+            id: this.id,
             name: this.name,
             company: this.company,
             workplace: this.workplace,

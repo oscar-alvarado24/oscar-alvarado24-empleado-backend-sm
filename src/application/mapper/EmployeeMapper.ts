@@ -4,8 +4,11 @@ import { stringToEnum } from "../../domain/value-objects/Position";
 import { CreateEmployeeDto } from "../dtos/CreateEmployeeDto";
 import { DataDoctorProcedure } from "../dtos/DataDoctorProcedure";
 import { EmployeeResponse } from "../dtos/EmployeeResponse";
+import { CryptoService } from "../helper/CryptoService";
+
 
 export class EmployeeMapper {
+
     static toEmployeeFromCreateDto(employeeDto: CreateEmployeeDto): Employee {
         const employeeProps: EmployeeProps = {
             id: employeeDto.id,
@@ -48,18 +51,22 @@ export class EmployeeMapper {
         });
     }
 
-    static toDataDoctorProcedure(employee: Employee): DataDoctorProcedure {
+    static async toDataDoctorProcedure(employee: Employee, cryptoService: CryptoService): Promise<DataDoctorProcedure> {
         const name = employee.firstName + (employee.secondName ? ' ' + employee.secondName : '') + ' ' + employee.lastName;
+        const id = await cryptoService.encrypt(employee.id.toString());
+        const company = await cryptoService.encrypt(employee.company.toString())
         return new DataDoctorProcedure(
-            employee.id,
+            id,
             name,
-            employee.company,
+            company,
             employee.workplace,
             employee.specialty || ''
         );
     }
 
-    static toDataDoctorProcedureList(employees: Employee[]): DataDoctorProcedure[] {
-        return employees.map(emp => this.toDataDoctorProcedure(emp));
+    static async toDataDoctorProcedureList(employees: Employee[], cryptoService: CryptoService): Promise<DataDoctorProcedure[]> {
+        return Promise.all(
+            employees.map(emp => this.toDataDoctorProcedure(emp, cryptoService))
+        );
     }
 }

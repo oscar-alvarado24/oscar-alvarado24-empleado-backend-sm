@@ -8,7 +8,7 @@ import http from 'http'; // Import http module for server instance
 import { logger } from './infrastructure/config/logger'; // Import logger
 import util from 'util'; // Import util for better object inspection
 
-const PORT: string | number = process.env.PORT || 3000;
+const PORT: string | number = process.env.PORT || 3001;
 
 const server: http.Server = app.listen(PORT, () => {
   logger.info(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
