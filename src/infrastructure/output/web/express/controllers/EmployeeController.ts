@@ -58,12 +58,12 @@ export class EmployeeController {
   }
 
   async getById(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const employeeId: string = req.params.id;
+    const employeeId: string = String(req.params.id);
     logger.info(`GET /api/v1/employees/${employeeId}`);
     try {
       const employee: Employee | null = await this.getEmployeeByIdUseCase.execute(employeeId);
       if (employee) {
-        logger.info(`Employee found: ${employeeId}`);
+        logger.debug(`Employee found: ${employeeId}`);
         res.status(200).json(employee);
       } else {
         logger.warn(`Employee not found: ${employeeId}`);
@@ -79,7 +79,7 @@ export class EmployeeController {
     logger.info('GET /api/v1/employees');
     try {
       const employees: Employee[] = await this.getAllEmployeesUseCase.execute();
-      logger.info(`Retrieved ${employees.length} employees`);
+      logger.debug(`Retrieved ${employees.length} employees`);
       res.status(200).json(instanceToPlain(employees));
     } catch (error: any) {
       logger.error(`Error in get all employees: ${error.message}`, error);
@@ -95,7 +95,7 @@ export class EmployeeController {
         res.status(400).json({ message: 'No IDs provided' });
         return;
       }
-
+      logger.debug('obteniendo la info de los doctores con los ids encriptados: ' + idsEncrypted);
       const doctors: DataDoctorProcedure[] = await this.getDoctorsByIdListUseCase.execute(idsEncrypted);
 
       res.status(200).json(doctors);
@@ -105,7 +105,7 @@ export class EmployeeController {
     }
   }
   async update(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const employeeId: string = req.params.id;
+    const employeeId: string = String(req.params.id);
     logger.info(`PUT /api/v1/employees/${employeeId} - Request Body: ${JSON.stringify(req.body)}`);
     try {
       const updateEmployeeDto = plainToInstance(UpdateEmployeeDto, req.body);
@@ -141,12 +141,12 @@ export class EmployeeController {
   }
 
   async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const employeeId: string = req.params.id;
+    const employeeId: string = String(req.params.id);
     logger.info(`DELETE /api/v1/employees/${employeeId}`);
     try {
       const success: boolean = await this.deleteEmployeeUseCase.execute(employeeId);
       if (success) {
-        logger.info(`Employee deleted successfully: ${employeeId}`);
+        logger.debug(`Employee deleted successfully: ${employeeId}`);
         res.status(204).send();
       } else {
         logger.warn(`Employee not found for delete: ${employeeId}`);

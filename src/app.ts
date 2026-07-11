@@ -69,7 +69,7 @@ app.use(excludeHealthPath(helmet(helmetOptions)));
 app.use(excludeHealthPath(cors(activeCorsOptions)));
 
 // 3. OPTIONS explícito (por si acaso)
-app.options('*', excludeHealthPath(cors(activeCorsOptions)));
+app.options('/{*path}', excludeHealthPath(cors(activeCorsOptions)));
 
 if (process.env.NODE_ENV === 'development') {
   logger.info('🔓 CORS: Development mode (permissive)');
@@ -155,25 +155,25 @@ try {
   // ====================================
 
   app.use((req, res, next) => {
-   logger.debug('=== REQUEST DEBUG ===');
-   logger.debug('Method:', req.method);
-   logger.debug('Original URL:', req.originalUrl);
-   logger.debug('Path:', req.path);
-   logger.debug('Base URL:', req.baseUrl);
-   logger.debug('Headers:', JSON.stringify(req.headers, null, 2));
-   logger.debug('====================');
-    next();
+  logger.debug('Incoming request', {
+    method: req.method,
+    originalUrl: req.originalUrl,
+    path: req.path,
+    baseUrl: req.baseUrl,
+    headers: req.headers, // objeto real, no JSON.stringify
   });
+  next();
+});
   app.use('/api/v1/employee', employeeRoutes(employeeController));
 
   // 404 Handler
-  app.use('*', (req: Request, res: Response) => {
-    res.status(404).json({
-      error: 'Route Not Found',
-      message: `Cannot ${req.method} ${req.originalUrl}`,
-      timestamp: new Date().toISOString(),
-    });
+  app.use('/{*path}', (req: Request, res: Response) => {
+  res.status(404).json({
+    error: 'Route Not Found',
+    message: `Cannot ${req.method} ${req.originalUrl}`,
+    timestamp: new Date().toISOString(),
   });
+});
 
   // Error Handler
   app.use(errorHandler);

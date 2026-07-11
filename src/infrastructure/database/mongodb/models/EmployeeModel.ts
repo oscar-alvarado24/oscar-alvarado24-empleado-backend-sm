@@ -1,9 +1,9 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-export interface IEmployeeDocument extends Document {
-  _id: number; 
+export interface IEmployeeDocument extends Document<number, {}, IEmployeeDocument> {
+  _id: number;
   firstName: string;
-  lastName: string; 
+  lastName: string;
   email: string;
   position: string;
   secondName?: string;
@@ -23,7 +23,7 @@ export interface IEmployeeDocument extends Document {
 }
 
 const employeeSchema = new Schema<IEmployeeDocument>({
-  _id: { type: Number, required: true }, 
+  _id: { type: Number, required: true },
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
@@ -31,7 +31,7 @@ const employeeSchema = new Schema<IEmployeeDocument>({
   secondName: { type: String, required: false },
   landline: { type: String, required: false },
   descriptionResidence: { type: String, required: false },
-  address: { type: String, required: true }, 
+  address: { type: String, required: true },
   cellPhone: { type: String, required: true },
   residencesType: { type: String, required: true },
   neighborhood: { type: String, required: true },
@@ -40,17 +40,17 @@ const employeeSchema = new Schema<IEmployeeDocument>({
   specialty: { type: String, required: false },
   photo: { type: String, required: false },
   active: { type: Boolean, required: false, default: true }
-}, { 
-  timestamps: true, 
-  _id: false, 
+}, {
+  timestamps: true,
+  _id: false,
   toJSON: {
-    transform: (doc, ret) => {
-      delete ret.__v; 
+    transform: (_doc, ret) => {
+      delete (ret as { __v?: number }).__v;
     }
   },
   toObject: {
-    transform: (doc, ret) => {
-      delete ret.__v;
+    transform: (_doc, ret) => {
+      delete (ret as { __v?: number }).__v;
     }
   }
 });

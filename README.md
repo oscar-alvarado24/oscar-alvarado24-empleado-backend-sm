@@ -68,7 +68,7 @@ This microservice is built to manage employee and provider personnel data. It fo
 
 2.  **Install dependencies:**
     ```bash
-    npm install
+    pnpm install
     ```
 
 3.  **Environment Variables:**
@@ -102,19 +102,19 @@ This microservice is built to manage employee and provider personnel data. It fo
 
 *   **Development Mode:** (With automatic reloading via `nodemon`)
     ```bash
-    npm run dev
+    pnpm run dev
     ```
     The server will start, typically on `http://localhost:3001`.
 
 *   **Production Mode:**
     1.  Build the TypeScript code:
         ```bash
-        npm run build
+        pnpm run build
         ```
         This compiles TypeScript to JavaScript in the `dist/` folder.
     2.  Start the application:
         ```bash
-        npm start
+        pnpm start
         ```
         This runs the compiled JavaScript from `dist/server.js`.
 
@@ -122,18 +122,18 @@ This microservice is built to manage employee and provider personnel data. It fo
 
 *   To compile TypeScript to JavaScript:
     ```bash
-    npm run build
+    pnpm run build
     ```
 
 ### Testing
 
 *   Run unit tests:
     ```bash
-    npm test
+    pnpm test
     ```
 *   Generate test coverage report:
     ```bash
-    npm run test:coverage
+    pnpm run test:coverage
     ```
 
 ## ⚙️ Project Structure
@@ -244,7 +244,7 @@ This project is maintained by Oscar Alvarado.
 
 Made with ❤️ and ☕.
 
---- 
+---
 
 © 2023 Oscar Alvarado. All rights reserved.
 
