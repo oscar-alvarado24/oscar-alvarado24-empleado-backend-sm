@@ -1,158 +1,255 @@
-# Node.js & Express Employee CRUD Microservice (Clean Architecture + TypeScript)
+# Oscar Alvarado's Employee Microservice 🧑‍💼
 
-This project implements a RESTful API for managing employee data, built with Node.js, Express, and TypeScript. It follows Clean Architecture principles to promote separation of concerns, maintainability, and testability.
+A robust Node.js and TypeScript microservice designed for managing employee data, including personnel information for providers. This backend service leverages Clean Architecture principles and integrates with MongoDB for data persistence.
 
-## Features
+[![Node.js](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Express.js](https://img.shields.io/badge/express-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
+[![MongoDB](https://img.shields.io/badge/mongodb-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Docker](https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 
-*   **REST API:** Provides Create, Read, Update, and Delete (CRUD) operations for employees.
-*   **Clean Architecture:** Organizes code into distinct layers (Domain, Application, Infrastructure) for better structure.
-*   **TypeScript:** Utilizes TypeScript for static typing, improving code quality and developer experience.
-*   **DTOs with Validation:** Employs Data Transfer Objects (DTOs) with `class-validator` and `class-transformer` for request payload validation.
-*   **MongoDB Integration:** Uses Mongoose for Object Data Modeling (ODM) with a MongoDB database.
-*   **Configurable Logging:** Integrated Winston logger for application events, requests, and errors.
-*   **Environment-based Configuration:** Uses `.env` files for managing environment-specific settings.
+## 📄 Table of Contents
 
-## Directory Structure Overview
+*   [🚀 Project Overview](#project-overview)
+*   [✨ Features](#features)
+*   [🛠️ Tech Stack](#tech-stack)
+*   [📦 Prerequisites](#prerequisites)
+*   [🚀 Installation](#installation)
+*   [💡 Usage](#usage)
+*   [⚙️ Project Structure](#project-structure)
+*   [🔒 API Reference](#api-reference)
+*   [📚 Logging](#logging)
+*   [🐳 Docker Integration](#docker-integration)
+*   [🤝 Contributing](#contributing)
+*   [📜 License](#license)
+*   [🔗 Important Links](#important-links)
+*   [❤️ Footer](#footer)
 
-*   `src/domain`: Contains the core business logic, entities (e.g., `Employee`), value objects (e.g., `Email`, `Position`), and repository interfaces. This layer is independent of frameworks and external concerns.
-*   `src/application`: Orchestrates the use cases of the application. It contains application services/use cases (e.g., `CreateEmployee`, `UpdateEmployee`) and DTOs. This layer depends on the domain layer.
-*   `src/infrastructure`: Provides implementations for external concerns like databases, web frameworks, and third-party services.
-    *   `src/infrastructure/database`: Contains MongoDB connection logic, Mongoose schemas (`EmployeeModel`), and repository implementations (`MongoEmployeeRepository`).
-    *   `src/infrastructure/web/express`: Contains Express.js specific setup, controllers (`EmployeeController`), routes, and middlewares (e.g., `errorHandler`).
-*   `src/config`: Houses application configuration, such as the logger setup.
+## 🚀 Project Overview
 
-## Prerequisites
+This microservice is built to manage employee and provider personnel data. It follows a Clean Architecture pattern to ensure maintainability, scalability, and testability. The primary technology stack includes Node.js, TypeScript, Express.js, and MongoDB.
 
-*   **Node.js:** v16+ recommended.
+## ✨ Features
+
+*   **Employee Management:** Full CRUD (Create, Read, Update, Delete) operations for employee records. 📝
+*   **Clean Architecture:** Adheres to architectural principles for a well-organized and maintainable codebase (Domain, Application, Infrastructure layers). 🏛️
+*   **TypeScript:** Utilizes TypeScript for static typing, enhancing code quality and developer experience. ✍️
+*   **DTOs with Validation:** Implements Data Transfer Objects (DTOs) with `class-validator` and `class-transformer` for robust input data validation. ✅
+*   **MongoDB Integration:** Uses Mongoose as an ODM for seamless interaction with a MongoDB database. 🗄️
+*   **Configurable Logging:** Integrated Winston logger for comprehensive logging of application events, requests, and errors. 📣
+*   **Environment-based Configuration:** Manages application settings using `.env` files for different environments. ☁️
+*   **AWS SDK Integration:** Utilizes AWS SDK for services like Cognito and SES, indicating potential for user management and email notifications.
+*   **Data Encryption:** Implements a `CryptoService` for encrypting sensitive data, enhancing security. 🔒
+
+## 🛠️ Tech Stack
+
+*   **Languages:** TypeScript, JavaScript, JSON, Markdown
+*   **Frameworks/Libraries:** Node.js, Express.js
+*   **Database:** MongoDB (with Mongoose)
+*   **Development Tools:** Nodemon, ts-node, Jest, Supertest, TypeScript
+*   **Utilities:** Winston (Logging), bcrypt (Hashing), Helmet (Security), CORS, dotenv
+*   **AWS Services:** Cognito Identity Provider, SES (via SDK)
+*   **Containerization:** Docker
+
+## 📦 Prerequisites
+
+*   **Node.js:** Version 16+ recommended.
 *   **MongoDB:** A running instance of MongoDB (local or cloud).
-*   **NPM:** (Comes with Node.js) or Yarn.
+*   **NPM:** (Node Package Manager) or Yarn.
+*   **AWS Account:** Required if utilizing Cognito or SES features fully (e.g., `AWS_REGION`, `COGNITO_USER_POOL_ID`, `COGNITO_CLIENT_ID`).
 
-## Setup and Installation
+## 🚀 Installation
 
 1.  **Clone the repository:**
     ```bash
-    git clone <repository-url>
-    ```
-    (Replace `<repository-url>` with the actual URL of this repository)
-
-2.  **Navigate to the project directory:**
-    ```bash
-    cd <project-directory>
+    git clone https://github.com/oscar-alvarado24/oscar-alvarado24-empleado-backend-sm.git
+    cd oscar-alvarado24-empleado-backend-sm
     ```
 
-3.  **Install dependencies:**
+2.  **Install dependencies:**
     ```bash
     npm install
     ```
 
-4.  **Environment Variables:**
-    *   Copy the example environment file `.env.example` to a new file named `.env`:
-        ```bash
-        cp .env.example .env
-        ```
-    *   Open the `.env` file and configure the variables as needed:
-        *   `PORT`: The port on which the application server will listen (e.g., 3001).
-        *   `MONGODB_URI`: The connection string for your MongoDB instance (e.g., `mongodb://localhost:27017/employee_db_typescript`).
-        *   `NODE_ENV`: The application environment (e.g., `development`, `production`, `test`).
+3.  **Environment Variables:**
+    Create a `.env` file in the root of the project by copying the example:
+    ```bash
+    cp .env.example .env
+    ```
+    Configure the following variables in your `.env` file:
+    *   `PORT`: The port the server will listen on (default: `3001`).
+    *   `NODE_ENV`: Environment (`development`, `production`, `test`).
+    *   `MONGODB_URI`: Your MongoDB connection string. (e.g., `mongodb://localhost:27017/employee_db_typescript_example`)
+    *   `AWS_REGION`: Your AWS region (if using AWS services).
+    *   `COGNITO_USER_POOL_ID`: Your Cognito User Pool ID.
+    *   `COGNITO_CLIENT_ID`: Your Cognito App Client ID.
+    *   `CRYPTO_SECRET_KEY`: A strong secret key for data encryption (Base64 encoded, 32 bytes).
 
     **Example `.env`:**
     ```ini
-    # .env
     PORT=3001
-    MONGODB_URI=mongodb://localhost:27017/employee_db_typescript
     NODE_ENV=development
+    MONGODB_URI=mongodb://localhost:27017/employee_db_typescript_example
+    AWS_REGION=us-east-1
+    COGNITO_USER_POOL_ID=us-east-1_xxxxxxxxx
+    COGNITO_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxx
+    CRYPTO_SECRET_KEY=your-base64-encoded-32-byte-secret-key==
     ```
 
-## Running the Application
+## 💡 Usage
 
-*   **Development Mode (with auto-restart using Nodemon and ts-node):**
+### Running the Application
+
+*   **Development Mode:** (With automatic reloading via `nodemon`)
     ```bash
     npm run dev
     ```
-    The server will typically start on the port specified in your `.env` file (e.g., `http://localhost:3001`).
+    The server will start, typically on `http://localhost:3001`.
 
 *   **Production Mode:**
     1.  Build the TypeScript code:
         ```bash
         npm run build
         ```
-        This compiles the TypeScript files from `src/` to JavaScript in the `dist/` directory.
+        This compiles TypeScript to JavaScript in the `dist/` folder.
     2.  Start the application:
         ```bash
         npm start
         ```
-        This runs the compiled JavaScript code from `dist/server.js`.
+        This runs the compiled JavaScript from `dist/server.js`.
 
-## Build
+### Building the Project
 
-*   To compile the TypeScript code to JavaScript (output to `dist/` directory):
+*   To compile TypeScript to JavaScript:
     ```bash
     npm run build
     ```
 
-*   **Note on `src/infrastructure/input/rest/`:**
-    *   The primary application code is organized under `src/domain`, `src/application`, `src/config`, `src/infrastructure/database`, and `src/infrastructure/web`. This core part of the application should compile cleanly.
-    *   There is an additional module located at `src/infrastructure/input/rest/` which seems to contain a separate or older API implementation. As of the last project update, this specific module has known TypeScript compilation errors (e.g., missing `CognitoService`, `SESService`, and different `EmployeeRepository` implementations).
-    *   To achieve a clean build of the primary application (excluding the `src/infrastructure/input/rest/` module), you can modify the `exclude` array in your `tsconfig.json` file:
+### Testing
 
+*   Run unit tests:
+    ```bash
+    npm test
+    ```
+*   Generate test coverage report:
+    ```bash
+    npm run test:coverage
+    ```
+
+## ⚙️ Project Structure
+
+The project follows a Clean Architecture pattern:
+
+*   **`src/domain`**: Core business logic, entities (`Employee`), value objects (`Email`, `Position`), and repository interfaces. Independent of external concerns.
+*   **`src/application`**: Orchestrates use cases (e.g., `CreateEmployee`, `GetEmployeeById`) and defines DTOs. Depends on the domain layer.
+*   **`src/infrastructure`**: Implements external concerns:
+    *   `database`: MongoDB connection (`connectDB`), Mongoose models (`EmployeeModel`), and repository implementations (`MongoEmployeeRepository`).
+    *   `output/web/express`: Express setup, controllers (`EmployeeController`), routes (`employeeRoutes`), and middlewares (`errorHandler`, `security`, `cognitoAuth`).
+    *   `config`: Application configuration (e.g., `logger.ts`).
+    *   `helper`: Utility classes and exceptions (e.g., `CryptoService`, Cognito-related exceptions).
+*   **`src/`**: Entry points (`app.ts`, `server.ts`).
+*   **`config/`**: Configuration files (e.g., `logger.ts`).
+*   **`tests/`**: (Implicit) Contains test files.
+
+## 🔒 API Reference
+
+Base URL: `/api/v1/employee`
+
+All endpoints require authentication via Cognito JWT tokens and specific group permissions (e.g., `pacientes`).
+
+*   **`POST /save`**: Create a new employee.
+    *   **Authentication:** Requires group `pacientes`.
+    *   **Request Body:** JSON object conforming to `CreateEmployeeDto`.
+    *   **Example:**
         ```json
-        // tsconfig.json example snippet
         {
-          "compilerOptions": {
-            // ... your existing compiler options ...
-          },
-          "include": [
-            "src/**/*"
-          ],
-          "exclude": [
-            "node_modules",
-            "**/*.spec.ts",
-            "**/*.test.ts",
-            "src/infrastructure/input/rest/**/*.ts" // Add or ensure this line is present
-          ]
+          "id": 101,
+          "firstName": "John",
+          "lastName": "Doe",
+          "email": "john.doe@example.com",
+          "position": "Developer",
+          "address": "123 Main St",
+          "cellPhone": "555-1234",
+          "residencesType": "House",
+          "neighborhood": "Downtown",
+          "company": 1,
+          "workplace": "Office A"
         }
         ```
-        Adding `"src/infrastructure/input/rest/**/*.ts"` to the `exclude` array will instruct the TypeScript compiler to ignore this directory during the build process, allowing the main application to compile without errors from this auxiliary module.
 
-## API Endpoints
-
-Base URL: `/api/v1/employees`
-
-*   **`POST /`**: Create a new employee.
-    *   **Request Body**: JSON object. Refer to `src/application/dtos/CreateEmployeeDto.ts` for field requirements and validation rules (e.g., `firstName`, `lastName`, `email`, `position`, `department` are required; `email` must be a valid format).
 *   **`GET /`**: Get all employees.
-*   **`GET /:id`**: Get a specific employee by their ID.
-*   **`PUT /:id`**: Update an existing employee by their ID.
-    *   **Request Body**: JSON object. Refer to `src/application/dtos/UpdateEmployeeDto.ts` for available fields (all fields are optional for update).
-*   **`DELETE /:id`**: Delete an employee by their ID.
+    *   **Authentication:** Requires group `pacientes`.
 
-**Note on Validation:** Request bodies for `POST` and `PUT` operations are validated using the defined DTOs. The API will return a 400 Bad Request response with error details if validation fails.
+*   **`GET /:id`**: Get a specific employee by ID.
+    *   **Authentication:** Requires group `pacientes`.
+    *   **Path Parameter:** `id` (Employee ID).
 
-## Logging
+*   **`PUT /:id`**: Update an existing employee by ID.
+    *   **Authentication:** Requires group `pacientes`.
+    *   **Path Parameter:** `id` (Employee ID).
+    *   **Request Body:** JSON object with fields to update, conforming to `UpdateEmployeeDto`.
 
-The application uses the Winston library for logging, configured in `src/config/logger.ts`.
-Logs include:
-*   Server start-up and database connection status.
-*   Incoming HTTP requests (method, URL, IP).
-*   Controller actions (e.g., employee creation, retrieval, errors).
-*   Unhandled promise rejections and uncaught exceptions.
-*   Error details in the `errorHandler` middleware.
+*   **`DELETE /:id`**: Delete an employee by ID.
+    *   **Authentication:** Requires group `pacientes`.
+    *   **Path Parameter:** `id` (Employee ID).
 
-By default, logs are output to the console with timestamps and colorization for different log levels.
+*   **`GET /doctors/by-id-list`**: Get a list of doctors by their encrypted IDs.
+    *   **Authentication:** Requires group `pacientes`.
+    *   **Query Parameter:** `ids` (comma-separated encrypted IDs).
+    *   **Returns:** Encrypted `DataDoctorProcedure` objects.
 
-## Clean Architecture
+**Note on Validation:** Request bodies are validated. Invalid requests will return a `400 Bad Request` with error details.
 
-This project adheres to Clean Architecture principles:
-*   **Entities (Domain):** Core business objects (e.g., `Employee`).
-*   **Use Cases (Application):** Application-specific business rules, orchestrating data flow between entities and infrastructure.
-*   **Interface Adapters (Infrastructure):** Controllers, presenters, and gateways that convert data for use cases and external tools.
-*   **Frameworks & Drivers (Infrastructure):** External tools like databases, web frameworks (Express.js), etc.
+## 📚 Logging
 
-This separation of concerns aims for a system that is:
-*   Independent of Frameworks.
-*   Testable.
-*   Independent of UI.
-*   Independent of Database.
-*   Independent of any external agency.
+Uses Winston for logging. Log levels and output format are configurable via `src/infrastructure/config/logger.ts` and the `NODE_ENV` environment variable.
 
-This makes the core logic more robust, easier to maintain, and adaptable to changes in external technologies.
+*   **Log Levels:** `debug`, `info`, `warn`, `error`.
+*   **Output:** Console (colorized) with timestamps and message.
+*   **Requests:** Logged with method, URL, status code, duration, IP, and User-Agent.
+*   **Errors:** Unhandled rejections, uncaught exceptions, and application errors are logged.
+
+## 🐳 Docker Integration
+
+Includes a `Dockerfile` for containerizing the application. It sets up a multi-stage build for a lean production image.
+
+*   **Base Image:** `node:20.19.6-alpine3.23`
+*   **Build Stage:** Compiles TypeScript code.
+*   **Production Stage:** Copies compiled code and production dependencies, runs as a non-root user.
+*   **Health Check:** Includes a `HEALTHCHECK` instruction to monitor the `/health` endpoint.
+*   **Entrypoint:** Uses `dumb-init` for proper signal handling.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1.  Fork the repository.
+2.  Create a new branch (`git checkout -b feature/your-feature-name`).
+3.  Make your changes.
+4.  Commit your changes (`git commit -m 'Add some feature'`).
+5.  Push to the branch (`git push origin feature/your-feature-name`).
+6.  Open a Pull Request.
+
+## 📜 License
+
+This project is not explicitly licensed. Please refer to the repository for any licensing information.
+
+## 🔗 Important Links
+
+*   **Repository:** [oscar-alvarado24/oscar-alvarado24-empleado-backend-sm](https://github.com/oscar-alvarado24/oscar-alvarado24-empleado-backend-sm)
+
+## ❤️ Footer
+
+This project is maintained by Oscar Alvarado.
+
+Made with ❤️ and ☕.
+
+--- 
+
+© 2023 Oscar Alvarado. All rights reserved.
+
+[⬆ Back to Top](#table-of-contents)
+
+
+---
+**<p align="center">Generated by [ReadmeCodeGen](https://www.readmecodegen.com/)</p>**
